@@ -1,0 +1,3 @@
+2025-11-10 11:55:42,927 - {'message': 'Order Notification subscribed successfully'}
+2025-11-10 11:55:42,928 - {'message': 'i_click_2_gain streaming subscribed successfully.'}
+2025-11-10 16:23:25,577 - Error while unsubscribing to feeds : / is not a connected namespace.
