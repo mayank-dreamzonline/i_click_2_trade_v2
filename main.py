@@ -43,6 +43,7 @@ limt_order = False
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=5, thread_name_prefix="TickProcessor")
 
 def process_tick(msg: dict):
+    logger.info("RECO: %s \n", msg)
     if 'userId' in msg:
         return
     stock_desc = trade_mgr.get_field(msg, "stock_description")
@@ -67,7 +68,6 @@ def process_tick(msg: dict):
     except Exception as e:
         logger.error(f"Failed to log recommendation: {e}")
     print("\a", end="")  # sound
-    logger.info("RECO: %s \n", msg)
     mac_notify("iClick2Gain Tick", f"{stock} {action} @ {now}")
 
 

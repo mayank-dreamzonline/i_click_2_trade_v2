@@ -9,3 +9,7 @@
 2025-11-11 00:43:23,193 - Error while unsubscribing to feeds : / is not a connected namespace.
 2025-11-11 08:15:03,346 - {'message': 'Order Notification subscribed successfully'}
 2025-11-11 08:15:03,347 - {'message': 'i_click_2_gain streaming subscribed successfully.'}
+2025-11-11 11:13:39,320 - Error while unsubscribing to feeds : / is not a connected namespace.
+2025-11-11 11:13:45,851 - {'message': 'Order Notification subscribed successfully'}
+2025-11-11 11:13:45,852 - {'message': 'i_click_2_gain streaming subscribed successfully.'}
+2025-11-11 15:44:29,612 - Error while unsubscribing to feeds : / is not a connected namespace.
