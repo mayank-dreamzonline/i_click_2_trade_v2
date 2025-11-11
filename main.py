@@ -6,10 +6,14 @@ import pytz   # install with `pip install pytz` if not already
 import subprocess
 import logging
 from logging_config import setup_logging
+import concurrent.futures  # <--- 1. Import this
 
 logger = logging.getLogger(__name__)
 
+import trade_logger  # <--- This line
+
 setup_logging()
+trade_logger.init_db()
 logger.info("Starting i_click_2_gain v2...")
 
 auth = BreezeAuth()
@@ -36,11 +40,9 @@ def mac_notify(title: str, text: str) -> None:
 
 limt_order = False
 
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=5, thread_name_prefix="TickProcessor")
 
-
-
-def on_ticks(msg: dict):
-
+def process_tick(msg: dict):
     if 'userId' in msg:
         return
     stock_desc = trade_mgr.get_field(msg, "stock_description")
@@ -58,11 +60,21 @@ def on_ticks(msg: dict):
         return  # malformed
     stock = (msg.get("stock_code") or msg.get("stockCode") or "")
     action = (msg.get("action_type") or msg.get("orderFlow") or "")
-    #trade_mgr.handle_market_reco(msg,limt_order, allocated_equity_value)
+    trade_mgr.handle_market_reco(msg,limt_order, allocated_equity_value)
     now = (datetime.now().strftime("%H:%M:%S"))
+    try:
+        trade_logger.log_recommendation(msg)
+    except Exception as e:
+        logger.error(f"Failed to log recommendation: {e}")
     print("\a", end="")  # sound
     logger.info("RECO: %s \n", msg)
     mac_notify("iClick2Gain Tick", f"{stock} {action} @ {now}")
+
+
+def on_ticks(msg: dict):
+    executor.submit(process_tick, msg)
+
+
 
 breeze.on_ticks = on_ticks
 breeze.subscribe_feeds(get_order_notification=True)
